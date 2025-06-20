@@ -19,7 +19,7 @@ services:
 
   pgsql:
     image: postgres:16-bullseye
-    container_name: pgsql_rh
+    container_name: pgsql
     restart: always
     ports:
       - "5432:5432"
@@ -29,6 +29,23 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - reverb
+
+  horizon:
+    build:
+      context: ./
+      dockerfile: ./docker/horizon/Dockerfile
+    image: araujoleonardo/horizon
+    container_name: horizon
+    restart: always
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ./storage:/var/www/storage
+    depends_on:
+      - api
+      - redis
     networks:
       - reverb
 
