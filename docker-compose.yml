@@ -3,7 +3,7 @@ services:
     build:
       context: ./
       dockerfile: ./docker/Dockerfile
-    image: araujoleonardo/reverb
+    image: araujoleonardo/reverb_api
     container_name: api
     restart: always #dev
     working_dir: /var/www/ #dev
