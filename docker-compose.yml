@@ -1,0 +1,44 @@
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    image: araujoleonardo/reverb
+    container_name: api
+    restart: always #dev
+    working_dir: /var/www/ #dev
+    volumes:
+      - ./:/var/www #dev
+      - ./storage:/var/www/storage
+    ports:
+      - "80:80" #http
+      - "443:443" #https
+      - "${REVERB_PORT:-8080}:${REVERB_PORT:-8080}" #https
+    networks:
+      - reverb #dev
+
+  pgsql:
+    image: postgres:16-bullseye
+    container_name: pgsql_rh
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/postgresql:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - reverb
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    networks:
+      - reverb
+
+networks:
+  reverb:
+    driver: bridge
