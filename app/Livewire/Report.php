@@ -12,7 +12,7 @@ class Report extends Component
     public function getListeners()
     {
         return [
-            'echo-private:Processed.Report.' . auth()->user()->id . ',ProcessedReport' => 'onReportProcessed',
+            'echo:Processed.Report,ProcessedReport' => 'onReportProcessed',
         ];
     }
 
@@ -24,7 +24,7 @@ class Report extends Component
     public function processReport()
     {
         $this->status = 'processing';
-        ProcessReport::dispatch(auth()->user()->id);
+        ProcessReport::dispatch();
     }
 
     public function onReportProcessed()
