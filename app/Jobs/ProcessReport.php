@@ -13,7 +13,7 @@ class ProcessReport implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $user_id)
+    public function __construct()
     {
         //
     }
@@ -23,7 +23,7 @@ class ProcessReport implements ShouldQueue
      */
     public function handle(): void
     {
-        sleep(5);
-        ProcessedReport::dispatch($this->user_id);
+        sleep(5); // simula processamento
+        event(new ProcessedReport());
     }
 }
