@@ -5,17 +5,17 @@ services:
       dockerfile: ./docker/Dockerfile
     image: araujoleonardo/reverb_api
     container_name: api
-    restart: always #dev
-    working_dir: /var/www/ #dev
+    restart: always
+    working_dir: /var/www/
     volumes:
-      - ./:/var/www #dev
+      - ./:/var/www
       - ./storage:/var/www/storage
     ports:
       - "80:80" #http
       - "443:443" #https
-      - "${REVERB_PORT:-8080}:${REVERB_PORT:-8080}" #https
+      - "${REVERB_PORT:-8080}:${REVERB_PORT:-8080}" #reverb
     networks:
-      - reverb #dev
+      - reverb
 
   pgsql:
     image: postgres:16-bullseye

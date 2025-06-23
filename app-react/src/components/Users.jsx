@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import echo from '../echo'; // ajuste o caminho conforme seu projeto
+import echo from '../echo';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
