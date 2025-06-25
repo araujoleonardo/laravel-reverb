@@ -23,14 +23,19 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     libxml2-dev \
     zip \
     unzip \
+    net-tools \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql pdo_pgsql zip iconv mbstring simplexml exif pcntl bcmath gd sockets fileinfo \
+    && docker-php-ext-install pdo_pgsql zip iconv mbstring simplexml exif pcntl bcmath gd sockets fileinfo \
     && pecl install redis-${REDIS_LIB_VERSION} \
     && docker-php-ext-enable redis \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Define usuário e permissão
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+RUN mkdir -p /var/www/storage/logs && chown -R www-data:www-data /var/www
 
 # Copia configurações personalizadas
 COPY ./docker/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -41,16 +46,6 @@ WORKDIR $APP_DIR
 
 # Copia os arquivos da aplicação com permissões adequadas
 COPY --chown=www-data:www-data . .
-
-# Define o proprietário do diretório de trabalho
-RUN chown -R www-data:www-data $APP_DIR
-
-# Instala e configura o nginx
-RUN apt-get update && apt-get install nginx -y
-RUN rm -rf /etc/nginx/sites-enabled/* && rm -rf /etc/nginx/sites-available/*
-COPY ./docker/nginx/default.conf /etc/nginx/sites-enabled/default.conf
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Comando padrão para iniciar o Supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
