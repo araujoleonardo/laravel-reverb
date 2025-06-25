@@ -12,7 +12,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     apt-utils \
     supervisor \
     curl \
-    nano \
     libzip-dev \
     zlib1g-dev \
     libpq-dev \
