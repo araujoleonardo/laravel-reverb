@@ -10,7 +10,6 @@ ARG REDIS_LIB_VERSION=6.0.2
 # Instala dependências essenciais e extensões PHP
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     apt-utils \
-    supervisor \
     curl \
     libzip-dev \
     zlib1g-dev \
@@ -32,12 +31,11 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Define usuário e permissão
+# Define usuário e permissões
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN mkdir -p /var/www/storage/logs && chown -R www-data:www-data /var/www
 
-# Copia configurações personalizadas
-COPY ./docker/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Copia configurações personalizadas do PHP (opcional)
 COPY ./docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Define diretório de trabalho
@@ -46,5 +44,5 @@ WORKDIR $APP_DIR
 # Copia os arquivos da aplicação com permissões adequadas
 COPY --chown=www-data:www-data . .
 
-# Comando padrão para iniciar o Supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# Inicia o user
+USER www-data
