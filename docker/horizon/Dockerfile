@@ -30,7 +30,7 @@ WORKDIR $APP_DIR
 
 # Copia apenas arquivos necessários para o Horizon funcionar
 COPY --chown=www-data:www-data composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-scripts --no-progress
+RUN composer install --no-dev --prefer-dist --no-scripts --no-progress --ignore-platform-reqs
 
 COPY --chown=www-data:www-data . .
 

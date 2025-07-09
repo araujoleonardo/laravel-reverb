@@ -4,6 +4,7 @@ import Report from "./components/Report.vue";
 
 <template>
   <div>
+    jhdguf
     <Report/>
   </div>
 </template>
